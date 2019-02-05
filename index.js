@@ -1,5 +1,7 @@
+
 //express is the framework we're going to use to handle requests
 const express = require('express');
+
 //Create a new instance of express
 const app = express();
 
@@ -11,103 +13,19 @@ app.use(bodyParser.json());
 
 //pg-promise is a postgres library that uses javascript promises
 const pgp = require('pg-promise')();
+
 //We have to set ssl usage to true for Heroku to accept our connection
 pgp.pg.defaults.ssl = true;
 
-//Create connection to Heroku Database
-let db = pgp(process.env.DATABASE_URL);
+app.use('/register', require('./routes/register.js'));
 
-if(!db) {
-   console.log("SHAME! Follow the intructions and set your DATABASE_URL correctly");
-   process.exit(1);
-}
+app.use('/hello', require('./routes/hello.js'));
 
-/*
- * Hello world functions below...
- */
-app.get("/hello", (req, res) => {
-    res.send({
-        message: "Hello, you sent a GET request"
-    });
-});
+app.use('/params', require('./routes/params.js'));
 
+app.use('/demosql', require('./routes/demosql.js'));
 
-app.post("/hello", (req, res) => {
-    res.send({
-        message: "Hello, you sent a POST request"
-    });
-});
-
-
-app.get("/params", (req, res) => {
-    res.send({
-        //req.query is a reference to arguments in the url
-        message: "Hello, " + req.query['name'] + "!"
-    });
-});
-
-app.post("/params", (req, res) => {
-
-    res.send({
-        //req.query is a reference to arguments in the POST body
-        message: "Hello, " + req.body['name'] + "! You sent a POST Request"
-    });
-});
-
-app.get("/wait", (req, res) => {
-    setTimeout(() => {
-        res.send({
-            message: "Thanks for waiting"
-        });
-    }, 1000);
-});
-
-
-app.post("/demosql", (req, res) => {
-    var name = req.body['name'];
-
-    if (name) {
-        db.none("INSERT INTO DEMO(Text) VALUES ($1)", name)
-        .then(() => {
-            //We successfully added the name, let the user know
-            res.send({
-                success: true
-            });
-        }).catch((err) => {
-            //log the error
-            console.log(err);
-            res.send({
-                success: false,
-                error: err
-            });
-        });
-    } else {
-        res.send({
-            success: false,
-            input: req.body,
-            error: "Missing required information"
-        });
-    }
-});
-
-app.get("/demosql", (req, res) => {
-
-    db.manyOrNone('SELECT Text FROM Demo')
-    //If successful, run function passed into .then()
-    .then((data) => {
-        res.send({
-            success: true,
-            names: data
-        });
-    }).catch((error) => {
-        console.log(error);
-        res.send({
-            success: false,
-            error: error
-        })
-    });
-});
-
+app.use('/wait', require('./routes/wait.js'));
 
 
 /*
