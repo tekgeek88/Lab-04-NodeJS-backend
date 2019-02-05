@@ -1,11 +1,9 @@
-
 //express is the framework we're going to use to handle requests
 const express = require('express');
-
 //Create a new instance of express
 const app = express();
 
-//let middleware = require('./utilities/middleware');
+let middleware = require('./utilities/middleware');
 
 const bodyParser = require("body-parser");
 //This allows parsing of the body of POST requests, that are encoded in JSON
@@ -16,6 +14,8 @@ const pgp = require('pg-promise')();
 
 //We have to set ssl usage to true for Heroku to accept our connection
 pgp.pg.defaults.ssl = true;
+
+app.use('/login', require('./routes/login.js'));
 
 app.use('/register', require('./routes/register.js'));
 

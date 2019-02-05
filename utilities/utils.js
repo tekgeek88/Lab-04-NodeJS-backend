@@ -13,7 +13,10 @@ function sendEmail(from, receiver, subj, message) {
   //similar to the DATABASE_URL and PHISH_DOT_NET_KEY (later section of the lab)
 
   //fake sending an email for now. Post a message to logs. 
-  console.log('Email sent: ' + message);
+  console.log('Email sent from: ' + from + '\n' +
+                ' to ' + receiver + '\n' +
+                ' subject ' + subject + '\n' +
+                ' message ' + message);
 }
 
 /**
