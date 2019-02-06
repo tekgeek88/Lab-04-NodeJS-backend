@@ -18,7 +18,7 @@ function sendEmail(from, receiver, subj, message) {
     from: from,
     to: receiver,
     subject: subj,
-    text: message
+    html: message
   };
   
   transporter.sendMail(mailOptions, function(error, info){
