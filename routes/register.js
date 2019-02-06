@@ -9,9 +9,14 @@ let db = require('../utilities/utils').db;
 
 let getHash = require('../utilities/utils').getHash;
 
-let sendEmail = require('../utilities/utils').sendEmail;
+let sendWelcomeEmail = require('../utilities/utils_mail').sendWelcomeEmail;
+
+let sendVerificationEmail = require('../utilities/utils_mail').sendVerificationEmail;
 
 var router = express.Router();
+// Use a validator to check the users credentials
+var expressValidator = require('express-validator');
+router.use(expressValidator());
 
 const bodyParser = require("body-parser");
 //This allows parsing of the body of POST requests, that are encoded in JSON
@@ -42,11 +47,48 @@ router.post('/', (req, res) => {
         db.none("INSERT INTO MEMBERS(FirstName, LastName, Username, Email, Password, Salt) VALUES ($1, $2, $3, $4, $5, $6)", params)
         .then(() => {
             //We successfully added the user, let the user know
+            // get the MemberId
+            db.one('SELECT MemberID, Email FROM Members WHERE Email=$1', [email])
+            .then(row => { //If successful, run function passed into .then()          
+                // Create a verification token for this user
+                var token ={
+                    memberID: row['memberid'],
+                    token: crypto.randomBytes(16).toString('hex')
+                };
+
+                db.none("INSERT INTO VerificationToken(MemberID, Token) VALUES ($1, $2)", [token.memberID, token.token])
+                .then(() => {
+                    console.log("Generating a verification token...");
+                    // If email did not send an error
+                    sendVerificationEmail(first, email, req, token);
+                    // res.status(200).send('A verification email has been sent to ' + email + '.');
+
+
+                }).catch((err) => {
+                    //log the error
+                    console.log(err);
+                    // Not sure why we would have an error here, we would have just made the user account
+                    res.send({
+                        success: false,
+                        error: err
+                    });
+                });
+            }).catch((err) => {
+                //log the error
+                console.log(err);
+                // Not sure why we would have an error here, we would have just made the user account
+                res.send({
+                    success: false,
+                    error: err
+                });
+            });
+ 
             res.send({
                 success: true
             });
-            // from, receiver, subj, message
-            sendEmail(first, email, "Welcome!", "<strong>Welcome to our app!</strong>");
+            // Welcome the new user to our app and have them confirm their email
+            // sendWelcomeEmail(first, email);
+            
         }).catch((err) => {
             //log the error
             console.log(err);

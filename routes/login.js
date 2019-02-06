@@ -8,6 +8,10 @@ let getHash = require('../utilities/utils').getHash;
 
 var router = express.Router();
 
+// Use a validator to check the users credentials
+var expressValidator = require('express-validator');
+router.use(expressValidator());
+
 const bodyParser = require("body-parser");
 //This allows parsing of the body of POST requests, that are encoded in JSON
 router.use(bodyParser.json());
@@ -22,10 +26,25 @@ router.post('/', (req, res) => {
     let email = req.body['email'];
     let theirPw = req.body['password'];
     let wasSuccessful = false;
-    if(email && theirPw) {
+
+    // Validate their email and make sure it has an @ sign and its not blank
+    req.assert('email', 'Email is not valid').isEmail();
+    req.assert('email', 'Email cannot be blank').notEmpty();
+    // Make sure the password is not blank
+    req.assert('password', 'Password cannot be blank').notEmpty();
+    req.sanitize('email').normalizeEmail({ remove_dots: false});
+
+    // Check for validation errors
+    let errors = req.validationErrors();
+    if (errors) {
+        return res.status(400).send({
+            success: false,
+            message: errors
+        });
+    } else {
         //Using the 'one' method means that only one row should be returned
-        db.one('SELECT Password, Salt FROM Members WHERE Email=$1', [email])
-        .then(row => { //If successful, run function passed into .then()
+        db.one('SELECT Password, Salt, Verification FROM Members WHERE Email=$1', [email])
+        .then(row => { //If successful, run function passed into .then()          
             let salt = row['salt'];
             //Retrieve our copy of the password
             let ourSaltedHash = row['password']; 
@@ -37,24 +56,34 @@ router.post('/', (req, res) => {
             let wasCorrectPw = ourSaltedHash === theirSaltedHash; 
 
             if (wasCorrectPw) {
-                //credentials match. get a new JWT
-                let token = jwt.sign({username: email},
-                    config.secret,
-                    { 
-                        expiresIn: '24h' // expires in 24 hours
-                    }
-                );
-                //package and send the results
-                res.json({
-                    success: true,
-                    message: 'Authentication successful!',
-                    token: token
-                  });
+
+                // If the password was correct check to see if they are verified
+                let isVerified = row['verification'];
+                if (!isVerified) {
+                    return res.status(401).send({ success: false,
+                        type: 'not-verified', 
+                        msg: 'Your account has not been verified.' }); 
+                } else {
+                    //credentials match. get a new JWT
+                    let token = jwt.sign({username: email},
+                        config.secret,
+                        { 
+                            expiresIn: '24h' // expires in 24 hours
+                        }
+                    );
+                    //package and send the results
+                    res.json({
+                        success: true,
+                        message: 'Authentication successful!',
+                        token: token
+                    });
+                }
 
             } else {
                 //credentials dod not match
-                res.send({
-                    success: false 
+                res.status(401).send({
+                    success: false,
+                    msg: 'Invalid email or password'
                 });
             }
         })
@@ -65,11 +94,6 @@ router.post('/', (req, res) => {
                 success: false,
                 message: err
             });
-        });
-    } else {
-        res.send({
-            success: false,
-            message: 'missing credentials'
         });
     }
 });
