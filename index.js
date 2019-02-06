@@ -5,6 +5,15 @@ const app = express();
 
 let middleware = require('./utilities/middleware');
 
+const bodyParser = require("body-parser");
+//This allows parsing of the body of POST requests, that are encoded in JSON
+app.use(bodyParser.json());
+
+//pg-promise is a postgres library that uses javascript promises
+const pgp = require('pg-promise')();
+//We have to set ssl usage to true for Heroku to accept our connection
+pgp.pg.defaults.ssl = true;
+
 app.use('/hello', require('./routes/hello.js'));
 
 app.use('/params', require('./routes/params.js'));
@@ -18,8 +27,6 @@ app.use('/register', require('./routes/register.js'));
 app.use('/login', require('./routes/login.js'));
 
 app.use('/phish', middleware.checkToken, require('./routes/phish.js'));
-
-app.use('/phish/setlists/recent', middleware.checkToken, require('./routes/phish.js'));
 
 /*
  * Return HTML for the / end point. 
