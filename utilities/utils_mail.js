@@ -46,21 +46,19 @@ function sendWelcomeEmail(firstName, email) {
 function sendVerificationEmail(firstName, email, request, token) {
 
   let subject = "Account Verification Token";
-  let message = "Hello " + firstName + ",\n\n" +
-                       "Please verify your account by clicking the link: \nhttp:\/\/" +
-                       request.headers.host + "\/confirmation\/" + token.token + ".\n";
+  
+  let message = '<html>' +
+                    '<body>' +
+                      'Hello ' + firstName + ', please click to confirm your email address' + '<br><br>' +
+                      '<form action = "http://' + request.headers.host + '/confirmation" method = "POST">' +
+                          '<input type = "hidden" name="token" value="' + token.token + '"}">' +
+                          '<input type = "submit" value = "Confirm">' +
+                      '</form>' +
+                    '</body>' +
+                  '</html>';
 
-  let message2 =  '<form method="post" action="' + request.headers.host + '/confirmation/" class="inline">' +
-                  '<input type="hidden" name="token" value="' + token.token + '">' +
-                  '<button type="submit" name="submit_param" value="submit_value" class="link-button">' +
-                  'This is a link that sends a POST request' +
-                  '</button>' +
-                  '</form>' + 
-                  'Your token is: ' + token.token;
-
-  sendEmail("no-reply@ourapp.com", email, subject, message2);
+  sendEmail("no-reply@ourapp.com", email, subject, message);
 }
-
 
 module.exports = {
   sendEmail, sendWelcomeEmail, sendVerificationEmail

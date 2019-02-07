@@ -13,6 +13,8 @@ let sendWelcomeEmail = require('../utilities/utils_mail').sendWelcomeEmail;
 
 let sendVerificationEmail = require('../utilities/utils_mail').sendVerificationEmail;
 
+let sendPasswordResetEmail = require('../utilities/utils_mail').sendPasswordResetEmail;
+
 var router = express.Router();
 // Use a validator to check the users credentials
 var expressValidator = require('express-validator');

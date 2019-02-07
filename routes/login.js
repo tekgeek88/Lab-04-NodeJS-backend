@@ -27,6 +27,8 @@ router.post('/', (req, res) => {
     let theirPw = req.body['password'];
     let wasSuccessful = false;
 
+    
+
     // Validate their email and make sure it has an @ sign and its not blank
     req.assert('email', 'Email is not valid').isEmail();
     req.assert('email', 'Email cannot be blank').notEmpty();

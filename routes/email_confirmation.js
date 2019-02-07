@@ -14,30 +14,34 @@ const bodyParser = require("body-parser");
 //This allows parsing of the body of POST requests, that are encoded in JSON
 router.use(bodyParser.json());
 
+// Create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 //add a get route to the router. 
 router.get("/", (req, res) => {
     res.send({
         message: "Hello, you sent a GET request"
+        
     });
 });
 
 // Handle the post with the token
-router.post('/', (req, res) => {
+router.post('/', urlencodedParser, (req, res) => {
     // Validate the token
     req.assert('token', 'Token cannot be blank').notEmpty();
+    let token = req.body['token'];
 
     // Check for validation errors and return if found
     let errors = req.validationErrors();
     if (errors) {
         return res.status(400).send({
             success: false,
-            message: errors
+            msg: errors
         });
     // Process the token and check if we should validate the user
     } else {
         // Fetch the token from the body of the post
         let token = req.body.token;
-
         // Check the database to see if there is a token matching the given token.
         db.one('SELECT MemberID, Token FROM VerificationToken WHERE Token=$1', [token])
         .then(row => { //If successful, run function passed into .then() 
@@ -63,7 +67,10 @@ router.post('/', (req, res) => {
 
                 // We successfully verified the user
                 console.log("check the Members table and see if we have a verified member!");
-                res.status(200).send("The account has been verified. Please log in.");
+                res.status(200).send({
+                    success: true,
+                    msg: "The account has been verified. Please log in."
+                });
 
             })
             .catch((err) => {
