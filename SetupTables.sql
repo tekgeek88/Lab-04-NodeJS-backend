@@ -62,3 +62,11 @@ CREATE TABLE Push_Token (KeyID SERIAL PRIMARY KEY,
                         Token VARCHAR(255),
                         FOREIGN KEY(MemberID) REFERENCES Members(MemberID)
 );
+
+
+DROP TABLE IF EXISTS VerificationToken;
+CREATE TABLE VerificationToken (MemberID INT PRIMARY KEY,
+                                Token VARCHAR(255) NOT NULL UNIQUE,
+                                createdAt TIMESTAMP NOT NULL DEFAULT NOW(),  
+                                FOREIGN KEY(MemberID) REFERENCES Members(MemberID) ON DELETE CASCADE
+);
