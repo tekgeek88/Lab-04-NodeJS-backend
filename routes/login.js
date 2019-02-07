@@ -62,7 +62,9 @@ router.post('/', (req, res) => {
                 // If the password was correct check to see if they are verified
                 let isVerified = row['verification'];
                 if (!isVerified) {
-                    return res.status(401).send({ success: false,
+                    // If this fails the wait screen doesn't go away
+                    // return res.status(401).send({ success: false,
+                    return res.send({ success: false,
                         type: 'not-verified', 
                         msg: 'Your account has not been verified.' }); 
                 } else {
