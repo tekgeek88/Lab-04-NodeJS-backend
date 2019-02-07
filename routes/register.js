@@ -63,7 +63,7 @@ router.post('/', (req, res) => {
                     console.log("Generating a verification token...");
                     // If email did not send an error
                     sendVerificationEmail(first, email, req, token);
-                    // res.status(200).send('A verification email has been sent to ' + email + '.');
+                    res.status(200).send('A verification email has been sent to ' + email + '.');
 
 
                 }).catch((err) => {
