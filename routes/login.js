@@ -39,7 +39,7 @@ router.post('/', (req, res) => {
     // Check for validation errors
     let errors = req.validationErrors();
     if (errors) {
-        return res.status(400).send({
+        return res.status(200).send({
             success: false,
             message: errors
         });
@@ -65,8 +65,8 @@ router.post('/', (req, res) => {
                     // If this fails the wait screen doesn't go away
                     // return res.status(401).send({ success: false,
                     return res.send({ success: false,
-                        type: 'not-verified', 
-                        msg: 'Your account has not been verified.' }); 
+                                      msg: 'Your account has not been verified.'
+                                    }); 
                 } else {
                     //credentials match. get a new JWT
                     let token = jwt.sign({username: email},
@@ -85,7 +85,7 @@ router.post('/', (req, res) => {
 
             } else {
                 //credentials dod not match
-                res.status(401).send({
+                res.send({
                     success: false,
                     msg: 'Invalid email or password'
                 });

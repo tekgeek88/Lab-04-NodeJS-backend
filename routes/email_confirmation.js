@@ -34,7 +34,7 @@ router.post('/', urlencodedParser, (req, res) => {
     // Check for validation errors and return if found
     let errors = req.validationErrors();
     if (errors) {
-        return res.status(400).send({
+        return res.send({
             success: false,
             msg: errors
         });
@@ -57,7 +57,7 @@ router.post('/', urlencodedParser, (req, res) => {
 
             // If the user has been verified return and end these shenanigan's
             if (isVerified) {
-                return res.status(400).send({
+                return res.send({
                     success: false, 
                     msg: 'This user has already been verified.' });
             // We need to validate the user
@@ -74,7 +74,7 @@ router.post('/', urlencodedParser, (req, res) => {
 
             })
             .catch((err) => {
-                res.status(418).send({
+                res.send({
                     success: false,
                     error: "We couldn't set isVerified to true"
                 });
@@ -82,7 +82,7 @@ router.post('/', urlencodedParser, (req, res) => {
             }
         })
         .catch((err) => { // 
-            res.status(400).send({
+            res.send({
                 success: false,
                 error: "Couldn't find a user with that token"
             });
@@ -93,7 +93,7 @@ router.post('/', urlencodedParser, (req, res) => {
         })
         .catch((err) => {
             //log the error
-            res.status(401).send({
+            res.send({
                 success: false,
                 error: 'Invalid token'
             });
