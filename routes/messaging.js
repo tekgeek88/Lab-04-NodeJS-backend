@@ -35,6 +35,7 @@ router.post("/send", (req, res) => {
         db.manyOrNone('SELECT * FROM Push_Token')
         .then(rows => {
             rows.forEach(element => {
+                console.log('Sending message to: ' + email);
                 msg_functions.sendToIndividual(element['token'], message, email);
             });
             res.send({
