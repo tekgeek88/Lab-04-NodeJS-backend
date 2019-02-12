@@ -15,7 +15,7 @@ function emailHandler(error, info) {
     console.log(error);
     console.log('##############  END sendMail ERROR  ##############');
   } else {
-    console.log(info.response);
+    console.log('Mail Hndler Info Response: ' + info.response);
   }
 }
 
@@ -39,7 +39,11 @@ function sendWelcomeEmail(firstName, email) {
   let welcomeSubject = "A refactored Welcome! ";
   let welcomeMessage = "<strong>A refactored Welcome to our app " + firstName + "!</strong>";
 
-  sendEmail("admin@ourapp.com", email, welcomeSubject, welcomeMessage);
+  try {
+    sendEmail("admin@ourapp.com", email, welcomeSubject, welcomeMessage);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 
