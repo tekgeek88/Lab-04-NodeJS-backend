@@ -65,7 +65,7 @@ router.post('/', (req, res) => {
                     sendVerificationEmail(first, email, req, token);
                     res.status.send({
                         success: true,
-                        error: err
+                        sentTo: email
                     });
 
 
@@ -87,12 +87,6 @@ router.post('/', (req, res) => {
                     error: err
                 });
             });
-            res.send({
-                success: true
-            });
-            // Welcome the new user to our app and have them confirm their email
-            // sendWelcomeEmail(first, email);
-            
         }).catch((err) => {
             //log the error
             console.log(err);
