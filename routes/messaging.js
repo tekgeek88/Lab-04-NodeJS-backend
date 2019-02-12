@@ -38,14 +38,16 @@ router.post("/send", (req, res) => {
                 console.log('Sending message to: ' + email);
                 msg_functions.sendToIndividual(element['token'], message, email);
             });
+            console.log('Yet success here');
             res.send({
                 success: true,
-                token: element['token'],
                 msg: message,
                 to: email
             });
         }).catch(err => {
+            console.log('There is an error here!');
             res.send({
+
                 success: false,
                 error: err,
                 desc: 'Sending message to: ' + email

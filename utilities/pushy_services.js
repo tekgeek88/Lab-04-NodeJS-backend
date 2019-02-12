@@ -3,7 +3,7 @@ var Pushy = require('pushy');
 // Plug in your Secret API Key 
 var pushyAPI = new Pushy(process.env.PUSHY_API_KEY);
 
-//use to send message to all clients registered to a Topoic 
+//use to send message to all clients registered to a Topic
 function sendToTopic(topic, msg, from) {
     //build the message for FCM to send
     var data = {
@@ -14,7 +14,7 @@ function sendToTopic(topic, msg, from) {
 
     console.log(data);
 
-    to = '/topics/' + topic; 
+    let to = '/topics/' + topic;
 
     // Send push notification via the Send Notifications API 
     // https://pushy.me/docs/api/send-notifications 

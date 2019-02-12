@@ -22,7 +22,7 @@ function emailHandler(error, info) {
 // This method handles the sending of all emails
 function sendEmail(from, receiver, subj, message) {
   
-  // Build the email ooptions
+  // Build the email options
   let mailOptions = {
     from: from,
     to: receiver,
