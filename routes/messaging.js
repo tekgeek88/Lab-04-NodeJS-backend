@@ -39,7 +39,10 @@ router.post("/send", (req, res) => {
                 msg_functions.sendToIndividual(element['token'], message, email);
             });
             res.send({
-                success: true
+                success: true,
+                token: element['token'],
+                msg: message,
+                to: email
             });
         }).catch(err => {
             res.send({
