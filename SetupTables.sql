@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS Members;
 CREATE TABLE Members (MemberID SERIAL PRIMARY KEY,
                       FirstName VARCHAR(255) NOT NULL,
-		              LastName VARCHAR(255) NOT NULL,
+                      LastName VARCHAR(255) NOT NULL,
                       Username VARCHAR(255) NOT NULL UNIQUE,
                       Email VARCHAR(255) NOT NULL UNIQUE,
                       Password VARCHAR(255) NOT NULL,
@@ -60,13 +60,13 @@ DROP TABLE IF EXISTS Push_Token;
 CREATE TABLE Push_Token (KeyID SERIAL PRIMARY KEY,
                         MemberID INT NOT NULL UNIQUE,
                         Token VARCHAR(255),
-                        FOREIGN KEY(MemberID) REFERENCES Members(MemberID)
+                        FOREIGN KEY(MemberID) REFERENCES Members(MemberID) ON DELETE CASCADE
 );
 
 
 DROP TABLE IF EXISTS VerificationToken;
 CREATE TABLE VerificationToken (MemberID INT PRIMARY KEY,
-                                Token VARCHAR(255) NOT NULL UNIQUE,
-                                createdAt TIMESTAMP NOT NULL DEFAULT NOW(),  
-                                FOREIGN KEY(MemberID) REFERENCES Members(MemberID) ON DELETE CASCADE
+                               Token VARCHAR(255) NOT NULL UNIQUE,
+                               createdAt TIMESTAMP NOT NULL DEFAULT NOW(),
+                               FOREIGN KEY(MemberID) REFERENCES Members(MemberID) ON DELETE CASCADE
 );

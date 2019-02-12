@@ -48,12 +48,14 @@ router.post("/send", (req, res) => {
             res.send({
                 success: false,
                 error: err,
+                desc: 'Sending message to: ' + email
             });
         })
     }).catch((err) => {
         res.send({
             success: false,
             error: err,
+            desc: 'SELECT * FROM Push_Token'
         });
     });
 });
