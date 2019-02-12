@@ -21,6 +21,8 @@ app.use('/phish', middleware.checkToken, require('./routes/phish.js'));
 
 app.use('/confirmation', require('./routes/email_confirmation.js'));
 
+app.use('/pushy', middleware.checkToken, require('./routes/pushy.js'));
+
 // app.post('/resend', require('./routes/resend__verification_token.js'));
 
 /*
