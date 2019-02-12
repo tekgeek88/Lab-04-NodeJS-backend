@@ -19,7 +19,7 @@ app.use('/login', require('./routes/login.js'));
 
 app.use('/phish', middleware.checkToken, require('./routes/phish.js'));
 
-app.use('/confirmation', require('./routes/email_confirmation.js'));
+app.use('/confirm', require('./routes/confirm.js'));
 
 app.use('/pushy', middleware.checkToken, require('./routes/pushy.js'));
 
