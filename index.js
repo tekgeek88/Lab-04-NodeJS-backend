@@ -23,7 +23,7 @@ app.use('/confirm', require('./routes/confirm.js'));
 
 app.use('/pushy', middleware.checkToken, require('./routes/pushy.js'));
 
-app.use('/messaging', require('./routes/messaging.js'));
+app.use('/messaging', middleware.checkToken, require('./routes/messaging.js'));
 
 // app.post('/resend', require('./routes/resend__verification_token.js'));
 

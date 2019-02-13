@@ -39,8 +39,6 @@ function sendToIndividual(token, msg, from) {
         "message": msg,
     };
 
-    console.log(data);
-
     // Send push notification via the Send Notifications API 
     // https://pushy.me/docs/api/send-notifications 
     pushyAPI.sendPushNotification(data, token, {}, function (err, id) {

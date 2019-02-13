@@ -1,3 +1,5 @@
+'use strict';
+
 const nodemailer = require('nodemailer');
   
 // We only need to create the transport opbject once.
